@@ -9,7 +9,10 @@ router.use(userMiddleware.AuthorizeUser)
 
 //Create a todo
 router.post("/",todosMiddleware.CreateTodoValidator, todosController.createTodoController)
-
+//Get todos
 router.get("/", todosController.getTodosController)
+
+//Update todo status
+router.put("/:id", todosController.updateTodoStatusController)
 
 module.exports = router;

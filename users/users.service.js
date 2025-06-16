@@ -50,7 +50,7 @@ const LoginUser = async ({ username, password }) => {
     };
   }
 
-  const token = generateToken();
+  const token = generateToken(user._id);
 
   return {
     status: 200,

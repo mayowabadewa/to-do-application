@@ -1,37 +1,35 @@
 const Todo = require("./todos.model")
 
-//Thsis function returns all the todos created by the user sorted by pending or completed tasks
-const getTodosByUserId = async(userId, options = {}) => {
-    let query = Todo.find({ userId })
-     let sortOrder = {}; // Default sort order
-    console.log(options)
- 
-    if (options.sortBy) {
-        if (options.sortBy.startsWith('-')) {
-            sortOrder[options.sortBy.substring(1)] = -1;
-        } else {
-            sortOrder[options.sortBy] = 1;
-        }
-    } else {
-        sortOrder = { createdAt: -1 }; 
-    }
-
-    query.sort(sortOrder);
-
-    const todos = await query.exec()
-    return todos
-
-}
-
 const createTodo = async (task, userId) => {
     const createTodo = await Todo.create({ task, userId})
 
     return createTodo
 }
+const getTodosByUserId = async (userId, sortOption, status) => {
+  const queryFilter = { userId };
 
-const updateTodo = async = 
+  if (status === "completed" || status === "pending") {
+    queryFilter.status = status;
+  }
+
+  const todos = await Todo.find(queryFilter).sort(sortOption).exec();
+  return todos;
+};
+
+const updateTodoStatus = async (userId, todoId, status) => {
+  const todo = await Todo.findOneAndUpdate(
+    { _id: todoId, userId },
+    { status },
+    { new: true }
+  );
+  return todo;
+};
+
+
+// const updateTodo = async = 
 
 module.exports = {
     getTodosByUserId,
-    createTodo
+    createTodo,
+    updateTodoStatus
 }
